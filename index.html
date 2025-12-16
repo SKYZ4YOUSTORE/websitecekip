@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SCANNER IP/PORT NESIA DARKNET 😈</title>
+    <style>
+        body { background-color: #0d0d0d; color: #cc00ff; font-family: 'Consolas', monospace; }
+        .container { max-width: 700px; margin: 50px auto; padding: 25px; border: 3px solid #ff0000; background-color: #1a001a; }
+        input, button { padding: 12px; margin: 8px 0; width: 100%; background-color: #330044; color: #fff; border: 1px solid #ff00ff; box-sizing: border-box; }
+        button { background-color: #ff0000; cursor: pointer; font-weight: bold; }
+        pre { background-color: #000; padding: 15px; border: 1px dashed #ff0000; white-space: pre-wrap; word-wrap: break-word; }
+        h2 { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔬 ALAT PELACAK IP & PORT 😈</h2>
+        <input type="text" id="targetDomain" placeholder="Domain Target (e.g., contohjahat.com)">
+        <input type="text" id="targetPorts" placeholder="Ports yang Mau Di-scan (e.g., 80,443,21,22)">
+        <button onclick="startScan()">LACAK DAN SCAN PORT 🔥</button>
+        <h3>HASIL PELACAKAN:</h3>
+        <pre id="results">Status: Siap melacak targetmu, Tuan...</pre>
+    </div>
+
+    <script>
+        async function startScan() {
+            const domain = document.getElementById('targetDomain').value.trim();
+            const ports = document.getElementById('targetPorts').value.trim();
+            const results = document.getElementById('results');
+
+            if (!domain || !ports) {
+                results.textContent = "☠️ Masukkan Domain dan Port dulu, Tuan!";
+                return;
+            }
+
+            results.textContent = `⚡ Melacak ${domain} dan Port ${ports}... Tunggu sebentar.`;
+
+            try {
+                const response = await fetch('/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain, ports })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    results.textContent = `😭 ERROR: ${data.error}`;
+                } else {
+                    let output = `[ HASIL PELACAKAN GANAS ]\n`;
+                    output += `IP Target: ${data.ip}\n`;
+                    output += `-----------------------------------\n`;
+                    output += `[ STATUS PORT ]\n`;
+                    data.portStatus.forEach(item => {
+                        const statusText = item.isOpen ? "✅ OPEN (Siap Diserang)" : "❌ CLOSED";
+                        output += `Port ${item.port}: ${statusText}\n`;
+                    });
+                    results.textContent = output;
+                }
+
+            } catch (err) {
+                results.textContent = `😭 ERROR KONEKSI KE SERVER BACKEND. Server mati atau jaringan putus?`;
+            }
+        }
+    </script>
+</body>
+</html>
